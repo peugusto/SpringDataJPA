@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,7 +20,7 @@ public class AutorRepositoryTest {
     AutorRepository repository;
 
     @Test
-    public void salvarTest(){
+     void salvarTest(){
 
         Autor autor = new Autor();
         autor.setNome("Ludmila");
@@ -31,13 +32,20 @@ public class AutorRepositoryTest {
     }
 
     @Test
-    public void excluirTest(){
+     void excluirTest(){
         UUID id = fromString("eb9f2d1f-424d-4747-9be7-ab8613f372c4");
-        repository.deleteById(id);
+        Optional<Autor> autor = repository.findById(id);
+
+        autor.ifPresentOrElse(
+                obj -> {
+                    repository.deleteById(obj.getId());
+                },
+                () -> System.out.print("Não encontrado")
+        );
     }
 
     @Test
-    public void atualizarTest(){
+     void atualizarTest(){
         UUID id = fromString("e209db05-8812-413d-97ad-a4a2338324d8");
 
         Optional<Autor> obj = repository.findById(id);
