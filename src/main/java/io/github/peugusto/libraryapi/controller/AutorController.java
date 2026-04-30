@@ -3,7 +3,6 @@ package io.github.peugusto.libraryapi.controller;
 import io.github.peugusto.libraryapi.controller.dto.AutorDTO;
 import io.github.peugusto.libraryapi.model.Autor;
 import io.github.peugusto.libraryapi.services.AutorService;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -48,4 +47,18 @@ public class AutorController {
                 return ResponseEntity.ok(dto);
     }).orElseGet(() -> ResponseEntity.notFound().build());
 }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deletarPorId(@PathVariable("id") String id){
+        var idAutor = UUID.fromString(id);
+        
+        Optional<Autor> autor = service.obterPorId(idAutor);
+
+        if (autor.isPresent()) {
+            service.deletarPorId(autor.get().getId());
+            return ResponseEntity.noContent().build(); // Retorna 204
+        }
+
+        return ResponseEntity.notFound().build(); // Retorna 404
+    }
 }
